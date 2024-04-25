@@ -1,2 +1,3 @@
-# repo_snitch
-See how your repo contributions compare to others
+# Repo Snitch
+
+See how your repo contributions stack up
