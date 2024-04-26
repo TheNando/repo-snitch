@@ -1,4 +1,4 @@
-import { pat, updatePat } from "./utils";
+import { pat, updateSignal } from "./utils";
 
 export const ConfigModal = () => (
   <dialog id="config_modal" class="modal">
@@ -21,10 +21,7 @@ export const ConfigModal = () => (
         </svg>
         <input
           class="grow"
-          onBlur={(event) => {
-            const target = event.target as HTMLInputElement;
-            updatePat(target.value);
-          }}
+          onBlur={updateSignal(pat)}
           placeholder="personal access token"
           type="text"
           value={pat}

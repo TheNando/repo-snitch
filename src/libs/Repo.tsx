@@ -1,23 +1,13 @@
-import { useState } from "preact/hooks";
+import { repo, updateSignal } from "./utils";
 
-export const Repo = () => {
-  const repoStr = window.localStorage.getItem("gh_repo") ?? "";
-  const [repo, setRepo] = useState(repoStr);
-
-  return (
-    <div>
-      <input
-        class="input input-bordered w-full"
-        placeholder="{owner}/{repo}"
-        type="text"
-        onInput={(event) => {
-          const target = event.target as HTMLInputElement;
-          const newRepo = target.value;
-          setRepo(newRepo);
-          window.localStorage.setItem("gh_repo", newRepo);
-        }}
-        value={repo}
-      />
-    </div>
-  );
-};
+export const Repo = () => (
+  <div>
+    <input
+      class="input input-bordered w-full"
+      placeholder="{owner}/{repo}"
+      type="text"
+      onInput={updateSignal(repo)}
+      value={repo}
+    />
+  </div>
+);
