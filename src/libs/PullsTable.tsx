@@ -1,8 +1,17 @@
 import { useEffect } from "preact/hooks";
+import { pat, repo } from "./utils";
+import { useSignal } from "@preact/signals";
+
+type Pull = {
+  branch: string;
+  id: number;
+  state: string;
+  title: string;
+  userImg: string;
+};
 
 export const PullsTable = () => {
-  const pat = window.localStorage.getItem("gh_pat");
-  const repo = window.localStorage.getItem("gh_repo");
+  const pulls = useSignal<Pull[]>([]);
   const repoUrl = `https://api.github.com/repos/${repo}/pulls`;
   const headers = {
     Accept: "application/vnd.github+json",
@@ -13,40 +22,47 @@ export const PullsTable = () => {
   useEffect(() => {
     fetch(repoUrl, { headers })
       .then((res) => res.json())
-      .then((res) => console.log({ res }));
+      .then(
+        (res) =>
+          (pulls.value = res.map((item: any) => ({
+            branch: item.head.ref,
+            id: item.number,
+            state: item.state,
+            title: item.title,
+            userImg: item.user.avatar_url,
+          })))
+      );
   }, []);
 
   return (
-    <div class="card bg-base-300 shadow-xl col-span-3">
+    <div class="card bg-base-300 shadow-xl col-span-4">
       <div class="card-body">
         <table class="table">
           <thead>
             <tr>
               <th></th>
-              <th>Name</th>
-              <th>Job</th>
-              <th>Favorite Color</th>
+              <th>User</th>
+              <th>State</th>
+              <th>Branch</th>
+              <th>Title</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th>1</th>
-              <td>Cy Ganderton</td>
-              <td>Quality Control Specialist</td>
-              <td>Blue</td>
-            </tr>
-            <tr>
-              <th>2</th>
-              <td>Hart Hagerty</td>
-              <td>Desktop Support Technician</td>
-              <td>Purple</td>
-            </tr>
-            <tr>
-              <th>3</th>
-              <td>Brice Swyre</td>
-              <td>Tax Accountant</td>
-              <td>Red</td>
-            </tr>
+            {pulls.value.map((items) => (
+              <tr>
+                <td>{items.id}</td>
+                <td>
+                  <div class="avatar">
+                    <div class="w-8 rounded-full">
+                      <img src={items.userImg} />
+                    </div>
+                  </div>
+                </td>
+                <td>{items.state}</td>
+                <td>{items.branch}</td>
+                <td>{items.title}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
