@@ -1,7 +1,7 @@
 import { repo, updateSignal } from "./utils";
 
 export const Repo = () => (
-  <div>
+  <div class="col-span-1">
     <input
       class="input input-bordered w-full"
       placeholder="{owner}/{repo}"
